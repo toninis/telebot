@@ -61,7 +61,7 @@ def inl(bot, update):
         ### send start signal
         bot.answerCallbackQuery(callback_query_id=update.callback_query.id, text="Started!")
         ### edit upon click
-        edit_text = "Selected option : %s from %s  @ %s " % (query.data , user , now )
+        edit_text = "Initialize from %s  @ %s " % ( user , now )
         bot.edit_message_text(text=edit_text,chat_id=query.message.chat_id,message_id=query.message.message_id)
         if g_name:
             text=' %s requested a status update from group %s .. ' % (user,g_name)
@@ -74,7 +74,7 @@ def inl(bot, update):
         ### send status signal
         bot.answerCallbackQuery(callback_query_id=update.callback_query.id, text="Find the status below : ")
         ### edit upon click
-        edit_text = "Selected option : %s from %s @ %s " % (query.data , user , now)
+        edit_text = "Stopped from %s @ %s " % ( user , now)
         bot.edit_message_text(text=edit_text,chat_id=query.message.chat_id,message_id=query.message.message_id)
 
         if g_name:
@@ -88,7 +88,7 @@ def inl(bot, update):
         ### send stop signal
         bot.answerCallbackQuery(callback_query_id=update.callback_query.id, text="Terminated!")
         ### edit upon click
-        edit_text = "Selected option : %s from %s @ %s " % (query.data , user , now )
+        edit_text = "Status update requested from %s @ %s " % ( user , now )
         bot.edit_message_text(text=edit_text,chat_id=query.message.chat_id,message_id=query.message.message_id)
 
         if g_name:
