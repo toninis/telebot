@@ -57,12 +57,16 @@ def f_info(bot, update):
 def inl(bot, update):
     query = update.callback_query
     message = query.message.chat
+    user = message.first_name
+    group = message.id
     logger.info(query)
     logger.info(message)
     #logger.info(update.callback_query)
     if query.data == "start":
         #func for turn on light res = k_light.on()
         bot.answerCallbackQuery(callback_query_id=update.callback_query.id, text="Started!")
+        text=' %s requested to start the service .. ' % user
+        f_send(bot,group,text)
         #bot.editMessageText(inline_message_id=update.callback_query.inline_message_id, text="Do you want to turn On or Off light? Light is ON")
         #hardcoded vars variant
         #bot.editMessageText(message_id=298, chat_id=174554240, text="Do you want to turn On or Off light? Light is ON")
@@ -77,6 +81,8 @@ def inl(bot, update):
     elif query.data == "stop":
         #func for turn on light res = k_light.off()
         bot.answerCallbackQuery(callback_query_id=update.callback_query.id, text="Terminated!")
+        text=' %s requested a termination .. ' % user
+        f_send(bot,group,text)
         #bot.editMessageText(inline_message_id=update.callback_query.inline_message_id, text="Do you want to turn On or Off light? Light is ON")
         #hardcoded vars variant
         #bot.editMessageText(message_id=298, chat_id=174554240, text="Do you want to turn On or Off light? Light is OFF")
@@ -99,7 +105,6 @@ def info_test(bot, update):
     #reply_keyboard = [['Boy', 'Girl', 'Other']]
     reply_markup = telegram.InlineKeyboardMarkup([[telegram.InlineKeyboardButton("start", callback_data="start"), telegram.InlineKeyboardButton("stop", callback_data="stop") , telegram.InlineKeyboardButton("status", callback_data="status")]])
     update.message.reply_text('Choose one of the following actions :',reply_markup=reply_markup)
-
     return True
 
 def button(bot, update):
@@ -112,7 +117,7 @@ def callback_handler(bot,update):
     reply_markup = telegram.InlineKeyboardMarkup([[telegram.InlineKeyboardButton("start", callback_data="start"), telegram.InlineKeyboardButton("stop", callback_data="stop") , telegram.InlineKeyboardButton("status", callback_data="status")]])
     update.message.reply_text('Choose one of the following actions :',reply_markup=reply_markup)
     #dp.add_handler(CallbackQueryHandler(update.message.reply_text('Choose one of the following actions :',reply_markup=reply_markup),inl))
-    return inl(bot,update)
+    #return inl(bot,update)
 
 
 def polling():
