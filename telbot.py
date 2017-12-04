@@ -9,8 +9,8 @@ import argparse
 #import errors
 #### https://api.telegram.org/bot345178316:AAFxqQy7qIA7gJwUM4nmfvpjfXK0EcdUq-Q/getUpdates
 
-global updater , db , t_end
-t_end = time.time() + 60
+global updater , db , now
+now = time.ctime(int(time.time()))
 updater = Updater(token='345178316:AAFxqQy7qIA7gJwUM4nmfvpjfXK0EcdUq-Q')
 dp = updater.dispatcher
 
@@ -39,22 +39,6 @@ def f_reply(bot, update):
     """Send a message when swears are issued."""
     update.message.reply_text('Language ... ')
 
-def f_info(bot, update):
-    """Send plain message"""
-    telegram.ChatAction.TYPING
-    group = update.message.chat_id
-    reply_keyboard = [['start', 'stop', 'status']]
-    #print update.message.__dict__
-    #print update.message.from_user.__dict__
-    #update.message.from_user
-    user = update.message.from_user.first_name
-    text = ' %s requested an Info Message .. ' % user
-    reply_markup=InlineKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
-
-    option = 'You choose %s ' % reply_markup
-    f_send(bot,group,option)
-    f_send(bot,group,text)
-
 def inl(bot, update):
     query = update.callback_query
     message = query.message.chat
@@ -73,7 +57,7 @@ def inl(bot, update):
         ### send start signal
         bot.answerCallbackQuery(callback_query_id=update.callback_query.id, text="Started!")
         ### edit upon click
-        edit_text = "Selected option : %s from %s " % (query.data , user)
+        edit_text = "Selected option : %s from %s  @ %s " % (query.data , user , now )
         bot.edit_message_text(text=edit_text,chat_id=query.message.chat_id,message_id=query.message.message_id)
         if g_name:
             text=' %s requested a status update from group %s .. ' % (user,g_name)
@@ -86,7 +70,7 @@ def inl(bot, update):
         ### send status signal
         bot.answerCallbackQuery(callback_query_id=update.callback_query.id, text="Find the status below : ")
         ### edit upon click
-        edit_text = "Selected option : %s from %s " % (query.data , user )
+        edit_text = "Selected option : %s from %s @ %s " % (query.data , user , now)
         bot.edit_message_text(text=edit_text,chat_id=query.message.chat_id,message_id=query.message.message_id)
 
         if g_name:
@@ -100,7 +84,7 @@ def inl(bot, update):
         ### send stop signal
         bot.answerCallbackQuery(callback_query_id=update.callback_query.id, text="Terminated!")
         ### edit upon click
-        edit_text = "Selected option : %s from %s " % (query.data , user )
+        edit_text = "Selected option : %s from %s @ %s " % (query.data , user , now )
         bot.edit_message_text(text=edit_text,chat_id=query.message.chat_id,message_id=query.message.message_id)
 
         if g_name:
@@ -116,14 +100,6 @@ def info_menu(bot, update):
     reply_markup = telegram.InlineKeyboardMarkup([[telegram.InlineKeyboardButton("start", callback_data="start"), telegram.InlineKeyboardButton("stop", callback_data="stop") , telegram.InlineKeyboardButton("status", callback_data="status")]])
     update.message.reply_text('Choose one of the following actions :',reply_markup=reply_markup)
     return True
-
-def button(bot, update):
-    query = update.callback_query
-    bot.edit_message_text(text="Selected option: {}".format(query.data),chat_id=query.message.chat_id,message_id=query.message.message_id)
-
-def callback_handler(bot,update):
-    reply_markup = telegram.InlineKeyboardMarkup([[telegram.InlineKeyboardButton("start", callback_data="start"), telegram.InlineKeyboardButton("stop", callback_data="stop") , telegram.InlineKeyboardButton("status", callback_data="status")]])
-    update.message.reply_text('Choose one of the following actions :',reply_markup=reply_markup)
 
 def polling():
     """Polling function ... """
