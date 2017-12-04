@@ -11,11 +11,13 @@ import argparse
 
 global updater , db , now
 now = time.ctime(int(time.time()))
+#### Initialize Bpt
+bot = telegram.Bot(token='345178316:AAFxqQy7qIA7gJwUM4nmfvpjfXK0EcdUq-Q')
 updater = Updater(token='345178316:AAFxqQy7qIA7gJwUM4nmfvpjfXK0EcdUq-Q')
 dp = updater.dispatcher
 
-
 def parser():
+    """Argument Parser"""
     argparser = argparse.ArgumentParser('flag_users.py')
     argparser.add_argument('--message', help='Text to Send',action='store_true', required=False)
     argparser.add_argument('--group', help='Choose the group ... ' , choices=['rocket','botland'] )
@@ -28,6 +30,7 @@ def get_pretty_print(json_object):
     return json.dumps(json_object, sort_keys=True, indent=4, separators=(',', ': '))
 
 def f_send(bot, chat, message):
+    """Simle send message function"""
     try:
         bot.send_message(chat_id=chat, text=message)
         return True
@@ -40,6 +43,7 @@ def f_reply(bot, update):
     update.message.reply_text('Language ... ')
 
 def inl(bot, update):
+    """ Inline CallbackQueryHandler function """
     query = update.callback_query
     message = query.message.chat
     user_info = query.from_user
@@ -97,6 +101,7 @@ def inl(bot, update):
         logger.error("Error ... ")
 
 def info_menu(bot, update):
+    """Pop UP menu for action """
     reply_markup = telegram.InlineKeyboardMarkup([[telegram.InlineKeyboardButton("start", callback_data="start"), telegram.InlineKeyboardButton("stop", callback_data="stop") , telegram.InlineKeyboardButton("status", callback_data="status")]])
     update.message.reply_text('Choose one of the following actions :',reply_markup=reply_markup)
     return True
@@ -129,9 +134,6 @@ if __name__ == "__main__":
         group = '-155882351'
     elif args.group == 'botland':
         group = '-243912457'
-
-    #### Initialize Bpt
-    bot = telegram.Bot(token='345178316:AAFxqQy7qIA7gJwUM4nmfvpjfXK0EcdUq-Q')
 
     if args.polling is True:
         ##### Updater
