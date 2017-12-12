@@ -9,7 +9,7 @@ import argparse
 #import errors
 #### https://api.telegram.org/bot345178316:AAFxqQy7qIA7gJwUM4nmfvpjfXK0EcdUq-Q/getUpdates
 
-global updater , db , now
+global updater , dp , now
 now = time.ctime(int(time.time()))
 #### Initialize Bpt
 bot = telegram.Bot(token='345178316:AAFxqQy7qIA7gJwUM4nmfvpjfXK0EcdUq-Q')
@@ -18,8 +18,8 @@ dp = updater.dispatcher
 
 def parser():
     """Argument Parser"""
-    argparser = argparse.ArgumentParser('flag_users.py')
-    argparser.add_argument('--message', help='Text to Send',action='store_true', required=False)
+    argparser = argparse.ArgumentParser('telbot.py')
+    argparser.add_argument('--message', help='Text to Send', required=False)
     argparser.add_argument('--group', help='Choose the group ... ' , choices=['rocket','botland'] )
     argparser.add_argument('--debug', help='Enable Debug Logging...' , action='store_true')
     argparser.add_argument('--polling', help='Enable Polling Mode...' , action='store_true')
@@ -64,9 +64,9 @@ def inl(bot, update):
         edit_text = "Initialize from %s  @ %s " % ( user , now )
         bot.edit_message_text(text=edit_text,chat_id=query.message.chat_id,message_id=query.message.message_id)
         if g_name:
-            text=' %s requested a status update from group %s .. ' % (user,g_name)
+            text=' %s requested a to start the service from group %s .. ' % (user,g_name)
         else:
-            text=' %s requested the status of the service .. ' % user
+            text=' %s requested to start the service .. ' % user
 
         f_send(bot,group,text)
 
@@ -74,7 +74,7 @@ def inl(bot, update):
         ### send status signal
         bot.answerCallbackQuery(callback_query_id=update.callback_query.id, text="Find the status below : ")
         ### edit upon click
-        edit_text = "Stopped from %s @ %s " % ( user , now)
+        edit_text = "Status update requested from %s @ %s " % ( user , now )
         bot.edit_message_text(text=edit_text,chat_id=query.message.chat_id,message_id=query.message.message_id)
 
         if g_name:
@@ -88,13 +88,13 @@ def inl(bot, update):
         ### send stop signal
         bot.answerCallbackQuery(callback_query_id=update.callback_query.id, text="Terminated!")
         ### edit upon click
-        edit_text = "Status update requested from %s @ %s " % ( user , now )
+        edit_text = "Stopped from %s @ %s " % ( user , now)
         bot.edit_message_text(text=edit_text,chat_id=query.message.chat_id,message_id=query.message.message_id)
 
         if g_name:
-            text=' %s requested a status update from group %s .. ' % (user,g_name)
+            text=' %s requested to stop the service from group %s .. ' % (user,g_name)
         else:
-            text=' %s requested the status of the service .. ' % user
+            text=' %s requested to stop the service .. ' % user
 
         f_send(bot,group,text)
     else:
@@ -139,7 +139,7 @@ if __name__ == "__main__":
         ##### Updater
         polling()
 
-    if args.message is True :
+    if args.message and group:
         ## get text from input ###
         text = args.message.decode('utf8')
         ### Send Messages
