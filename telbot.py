@@ -61,7 +61,7 @@ def inl(bot, update):
         ### send start signal
         bot.answerCallbackQuery(callback_query_id=update.callback_query.id, text="Started!")
         ### edit upon click
-        edit_text = "Initialize from %s  @ %s " % ( user , now )
+        edit_text = "Initialize from %s @ %s " % ( user , now )
         bot.edit_message_text(text=edit_text,chat_id=query.message.chat_id,message_id=query.message.message_id)
         if g_name:
             text=' %s requested a to start the service from group %s .. ' % (user,g_name)
