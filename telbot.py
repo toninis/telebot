@@ -106,12 +106,22 @@ def info_menu(bot, update):
     update.message.reply_text('Choose one of the following actions :',reply_markup=reply_markup)
     return True
 
+def songify(bot, update):
+    logger.info(update)
+    #logger.info(update.message)
+    reply="I will send you a new song everytime you use the command /song . Please do not spam !! "
+    update.message.reply_text(reply)
+
 def polling():
     """Polling function ... """
     #### Handlers ####
 
     dp.add_handler(RegexHandler('fuck',f_reply))
     dp.add_handler(CommandHandler('info',info_menu))
+
+    ### spotipy section
+    dp.add_handler(CommandHandler('song',songify))
+
     dp.add_handler(CallbackQueryHandler(inl))
 
     #dp.add_error_handler(error)
