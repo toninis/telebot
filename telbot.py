@@ -9,11 +9,12 @@ import argparse
 #import errors
 #### https://api.telegram.org/bot345178316:AAFxqQy7qIA7gJwUM4nmfvpjfXK0EcdUq-Q/getUpdates
 
-global updater , dp , now
+global updater , dp , now , yoda
 now = time.ctime(int(time.time()))
 #### Initialize Bpt
 bot = telegram.Bot(token='345178316:AAFxqQy7qIA7gJwUM4nmfvpjfXK0EcdUq-Q')
 updater = Updater(token='345178316:AAFxqQy7qIA7gJwUM4nmfvpjfXK0EcdUq-Q')
+yoda = 'CgADBAADxIQAArkZZAdDAThgy_W8cAI'
 dp = updater.dispatcher
 
 def parser():
@@ -29,11 +30,13 @@ def parser():
 def get_pretty_print(json_object):
     return json.dumps(json_object, sort_keys=True, indent=4, separators=(',', ': '))
 
-def f_send(bot, chat, message):
+def f_send(bot, chat, message=None,doc=None):
     """Simle send message function"""
     try:
-        bot.send_message(chat_id=chat, text=message)
-        return True
+        if doc:
+            return bot.send_document(chat_id=chat,document=doc)
+        elif message:
+            return bot.send_message(chat_id=chat, text=message)
     except Exception as e:
         logger.error('Something went wrong sending the message: %s ' % str(e) )
         return False
@@ -42,20 +45,35 @@ def f_reply(bot, update):
     """Send a message when swears are issued."""
     update.message.reply_text('Language ... ')
 
+def get_details(update,callback=None):
+    if callback is True:
+        query = update.callback_query
+        message = query.message.chat
+        user_info = query.from_user
+        g_name = ''
+        if message.type == "group":
+            user = user_info.first_name
+            g_name = message.title
+        elif message.type == "private":
+            user = message.first_name
+        group = message.id
+        return (user , group , query , g_name )
+    else:
+        message = update.message.chat
+        user_info = update.message.from_user
+        g_name = ''
+        if message.type == "group":
+            user = user_info.first_name
+            g_name = message.title
+        elif message.type == "private":
+            user = message.first_name
+        group = message.id
+        return (user , group , g_name)
+
+
 def inl(bot, update):
     """ Inline CallbackQueryHandler function """
-    query = update.callback_query
-    message = query.message.chat
-    user_info = query.from_user
-    g_name = ''
-    if message.type == "group":
-        user = user_info.first_name
-        g_name = message.title
-    elif message.type == "private":
-        user = message.first_name
-    group = message.id
-    logger.info(query.from_user)
-    logger.info(message)
+    (user , group , query , g_name) = get_details(update,callback=True)
 
     if query.data == "start":
         ### send start signal
@@ -68,12 +86,13 @@ def inl(bot, update):
         else:
             text=' %s requested to start the service .. ' % user
 
-        f_send(bot,group,text)
+        f_send(bot,group,message=text)
 
     elif query.data == "status":
         ### send status signal
         bot.answerCallbackQuery(callback_query_id=update.callback_query.id, text="Find the status below : ")
         ### edit upon click
+
         edit_text = "Status update requested from %s @ %s " % ( user , now )
         bot.edit_message_text(text=edit_text,chat_id=query.message.chat_id,message_id=query.message.message_id)
 
@@ -82,7 +101,7 @@ def inl(bot, update):
         else:
             text=' %s requested the status of the service .. ' % user
 
-        f_send(bot,group,text)
+        f_send(bot,group,message=text)
 
     elif query.data == "stop":
         ### send stop signal
@@ -96,7 +115,7 @@ def inl(bot, update):
         else:
             text=' %s requested to stop the service .. ' % user
 
-        f_send(bot,group,text)
+        f_send(bot,group,message=text)
     else:
         logger.error("Error ... ")
 
@@ -104,19 +123,27 @@ def info_menu(bot, update):
     """Pop UP menu for action """
     reply_markup = telegram.InlineKeyboardMarkup([[telegram.InlineKeyboardButton("start", callback_data="start"), telegram.InlineKeyboardButton("stop", callback_data="stop") , telegram.InlineKeyboardButton("status", callback_data="status")]])
     update.message.reply_text('Choose one of the following actions :',reply_markup=reply_markup)
-    return True
 
 def songify(bot, update):
-    logger.info(update)
-    #logger.info(update.message)
-    reply="I will send you a new song everytime you use the command /song . Please do not spam !! "
-    update.message.reply_text(reply)
+    # logger.info(update.message.__dict__)
+    # logger.info(update.message.from_user.__dict__)
+    # logger.info(update.message.entities)
+    # logger.info(update.message.chat.__dict__)
+    # #logger.info(update.message)
+    (user , group , g_name) = get_details(update)
+    reply="I will send you a new song everytime you use the command /song . Please do not spam %s !! " % user
+    f_send(bot,group,reply)
+
+def yoda_f(bot,update):
+    (user , group , g_name) = get_details(update)
+    f_send(bot,group,doc=yoda)
 
 def polling():
     """Polling function ... """
     #### Handlers ####
 
     dp.add_handler(RegexHandler('fuck',f_reply))
+    dp.add_handler(RegexHandler('yoda',yoda_f))
     dp.add_handler(CommandHandler('info',info_menu))
 
     ### spotipy section
