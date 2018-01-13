@@ -1,11 +1,14 @@
 import time
 import logging
 import telegram
-from telegram import ReplyKeyboardMarkup,InlineKeyboardMarkup
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, InlineQueryHandler, CallbackQueryHandler, RegexHandler,filters
+from telegram import ReplyKeyboardMarkup,InlineKeyboardMarkup , error
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, InlineQueryHandler, CallbackQueryHandler, RegexHandler,filters ##,errors
 import json
 import pprint
 import argparse
+import os
+import re
+## import paramiko
 #import errors
 #### https://api.telegram.org/bot345178316:AAFxqQy7qIA7gJwUM4nmfvpjfXK0EcdUq-Q/getUpdates
 
@@ -25,6 +28,10 @@ def parser():
     argparser.add_argument('--polling', help='Enable Polling Mode...' , action='store_true')
     #argparser.add_argument('--polling', help='Enable Polling Mode...' , action='store_true')
     return argparser.parse_args()
+
+def output(cmd):
+    o = os.popen(cmd)
+    return o.read()
 
 def get_pretty_print(json_object):
     return json.dumps(json_object, sort_keys=True, indent=4, separators=(',', ': '))
@@ -54,8 +61,8 @@ def inl(bot, update):
     elif message.type == "private":
         user = message.first_name
     group = message.id
-    logger.info(query.from_user)
-    logger.info(message)
+    # logger.info(query.from_user)
+    # logger.info(message)
 
     if query.data == "start":
         ### send start signal
@@ -72,16 +79,27 @@ def inl(bot, update):
 
     elif query.data == "status":
         ### send status signal
-        bot.answerCallbackQuery(callback_query_id=update.callback_query.id, text="Find the status below : ")
+        _space = output('df -h | grep -w / ')
+        _space_numbers = _space.split()
+        #logger.info("_space_numbers : %s" % _space_numbers)
+        _space_text = ""
+        for gb in _space_numbers[1:]:
+            _space_text = _space_text + "%s\t" % (gb)
+
+        #logger.info("_space_text : %s" % _space_text)
+        _text = "Size\tUse\tAvail\tUse%%\tMounted on\n%s" % _space_text
+        print("_space : %s" % _text)
+        bot.answerCallbackQuery(callback_query_id=update.callback_query.id, text=_text)
         ### edit upon click
         edit_text = "Status update requested from %s @ %s " % ( user , now )
-        bot.edit_message_text(text=edit_text,chat_id=query.message.chat_id,message_id=query.message.message_id)
+        #bot.edit_message_text(text=edit_text,chat_id=query.message.chat_id,message_id=query.message.message_id)
 
         if g_name:
             text=' %s requested a status update from group %s .. ' % (user,g_name)
         else:
             text=' %s requested the status of the service .. ' % user
 
+        text= _text
         f_send(bot,group,text)
 
     elif query.data == "stop":
@@ -114,7 +132,7 @@ def polling():
     dp.add_handler(CommandHandler('info',info_menu))
     dp.add_handler(CallbackQueryHandler(inl))
 
-    #dp.add_error_handler(error)
+    dp.add_error_handler(error)
 
     updater.start_polling()
 
