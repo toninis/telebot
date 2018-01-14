@@ -1,19 +1,19 @@
 import time
 import logging
 import telegram
-from telegram import ReplyKeyboardMarkup,InlineKeyboardMarkup
+from telegram import ReplyKeyboardMarkup,InlineKeyboardMarkup , error
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, InlineQueryHandler, CallbackQueryHandler, RegexHandler,filters
 import json
+import os
 import pprint
 import argparse
-#import errors
-#### https://api.telegram.org/bot345178316:AAFxqQy7qIA7gJwUM4nmfvpjfXK0EcdUq-Q/getUpdates
 
 global updater , dp , now , yoda
 now = time.ctime(int(time.time()))
 #### Initialize Bpt
-bot = telegram.Bot(token='345178316:AAFxqQy7qIA7gJwUM4nmfvpjfXK0EcdUq-Q')
-updater = Updater(token='345178316:AAFxqQy7qIA7gJwUM4nmfvpjfXK0EcdUq-Q')
+_token = os.environ.get('TELEBOT')
+bot = telegram.Bot(token=_token)
+updater = Updater(token=_token)
 yoda = 'CgADBAADxIQAArkZZAdDAThgy_W8cAI'
 dp = updater.dispatcher
 
@@ -24,7 +24,6 @@ def parser():
     argparser.add_argument('--group', help='Choose the group ... ' , choices=['rocket','botland'] )
     argparser.add_argument('--debug', help='Enable Debug Logging...' , action='store_true')
     argparser.add_argument('--polling', help='Enable Polling Mode...' , action='store_true')
-    #argparser.add_argument('--polling', help='Enable Polling Mode...' , action='store_true')
     return argparser.parse_args()
 
 def get_pretty_print(json_object):
@@ -151,7 +150,7 @@ def polling():
 
     dp.add_handler(CallbackQueryHandler(inl))
 
-    #dp.add_error_handler(error)
+    dp.add_error_handler(error)
 
     updater.start_polling()
 
