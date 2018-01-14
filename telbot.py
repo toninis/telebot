@@ -25,7 +25,6 @@ def parser():
     argparser.add_argument('--group', help='Choose the group ... ' , choices=['rocket','botland'] )
     argparser.add_argument('--debug', help='Enable Debug Logging...' , action='store_true')
     argparser.add_argument('--polling', help='Enable Polling Mode...' , action='store_true')
-    #argparser.add_argument('--polling', help='Enable Polling Mode...' , action='store_true')
     return argparser.parse_args()
 
 def output(cmd):
