@@ -1,22 +1,21 @@
 import time
 import logging
 import telegram
-from telegram import ReplyKeyboardMarkup,InlineKeyboardMarkup , error
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, InlineQueryHandler, CallbackQueryHandler, RegexHandler,filters ##,errors
+from telegram import ReplyKeyboardMarkup , InlineKeyboardMarkup , error
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, InlineQueryHandler, CallbackQueryHandler, RegexHandler
 import json
 import pprint
 import argparse
 import os
 import re
-## import paramiko
-#import errors
-#### https://api.telegram.org/bot345178316:AAFxqQy7qIA7gJwUM4nmfvpjfXK0EcdUq-Q/getUpdates
+##import paramiko
 
 global updater , dp , now
 now = time.ctime(int(time.time()))
 #### Initialize Bpt
-bot = telegram.Bot(token='345178316:AAFxqQy7qIA7gJwUM4nmfvpjfXK0EcdUq-Q')
-updater = Updater(token='345178316:AAFxqQy7qIA7gJwUM4nmfvpjfXK0EcdUq-Q')
+_token = os.environ.get('TELEBOT')
+bot = telegram.Bot(token=_token)
+updater = Updater(token=_token)
 dp = updater.dispatcher
 
 def parser():
