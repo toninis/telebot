@@ -1,7 +1,7 @@
 import time
 import logging
 import telegram
-from telegram import ReplyKeyboardMarkup , InlineKeyboardMarkup , error
+from telegram import InlineKeyboardMarkup , error
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, InlineQueryHandler, CallbackQueryHandler, RegexHandler
 import json
 import pprint
