@@ -6,6 +6,8 @@ pipeline:
     #   - DOCKER_HOST=tcp://docker:2375
     commands:
       - docker build -t telebot:${DRONE_COMMIT} .
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
 
   deploy:
     image: docker:18.03
@@ -14,6 +16,8 @@ pipeline:
       - TELEBOT=${TELEBOT_TOKEN}
     commands:
       - docker run -d --name telebot telebot:${DRONE_COMMIT}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
 
 # services:
 #   docker:
