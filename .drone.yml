@@ -10,7 +10,6 @@ pipeline:
   deploy:
     image: docker:18.03
     environment:
-      # - DOCKER_HOST=tcp://docker:2375
       - TELEBOT=${TELEBOT_TOKEN}
     commands:
       - docker run -d --name telebot telebot:${DRONE_COMMIT}
