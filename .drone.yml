@@ -15,8 +15,3 @@ pipeline:
       - docker run -d --name telebot telebot:${DRONE_COMMIT}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-
-# services:
-#   docker:
-#     image: docker:18.03-dind
-#     command: "--tls=false"
