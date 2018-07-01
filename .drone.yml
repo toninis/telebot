@@ -3,16 +3,17 @@ pipeline:
   build:
     image: docker:18.03
     commands:
+      - echo -e "${TELEBOT}"
       - docker build -t telebot:${DRONE_COMMIT} .
+    environment:
+      - TELEBOT=${TELEBOT}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    secrets: [ telebot ]
 
   deploy:
     image: docker:18.03
     commands:
-      - echo -e "${TELEBOT}"
       - docker run -d --name telebot.${DRONE_BUILD_NUMBER} telebot:${DRONE_COMMIT}
-    environment:
-      - TELEBOT=${TELEBOT}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
