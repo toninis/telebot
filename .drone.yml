@@ -3,7 +3,7 @@ pipeline:
   build:
     image: docker:18.03
     commands:
-      - echo -e "${TELEBOT_TOKEN}\n${TELEBOT}"  
+      - echo -e "${telebot_token}\n${TELEBOT}"  
       - docker build -t telebot:${DRONE_COMMIT} .
     environment:
       - TELEBOT=${TELEBOT_TOKEN}
