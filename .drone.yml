@@ -4,8 +4,6 @@ pipeline:
     image: docker:18.03
     commands:
       - docker build -t telebot:${DRONE_COMMIT} .
-    environment:
-      - TELEBOT=${TELEBOT_TOKEN}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
@@ -13,5 +11,7 @@ pipeline:
     image: docker:18.03
     commands:
       - docker run -d --name telebot.${DRONE_BUILD_NUMBER} telebot:${DRONE_COMMIT}
+    environment:
+      - TELEBOT=${TELEBOT_TOKEN}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock

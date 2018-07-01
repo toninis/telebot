@@ -1,12 +1,10 @@
-FROM python
+FROM python:2.7.15
 
 MAINTAINER Antonis Stamatiou "stamatiou.antonis@protonmail.com"
 
 WORKDIR /app
-COPY ./requirements.txt /app
-RUN pip install -r requirements.txt
-COPY . /app
-ENV TELEBOT=${TELEBOT}
+RUN pip install telegram python-telegram-bot
+COPY telebot.py /app
 
 ENTRYPOINT [ "python" ]
 
