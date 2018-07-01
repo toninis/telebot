@@ -4,7 +4,6 @@ pipeline:
     image: docker:18.03-dind
     commands:
       - docker build -t telebot:${DRONE_COMMIT} .
-    volumes
 
   deploy:
     image: docker:18.03-dind
