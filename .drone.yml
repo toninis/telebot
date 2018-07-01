@@ -18,4 +18,5 @@ pipeline:
 services:
   docker:
     image: docker:18.03-dind
-    # privileged: true
+    command: "--tls=false"
+    privileged: true
