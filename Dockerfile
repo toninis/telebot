@@ -4,7 +4,7 @@ MAINTAINER Antonis Stamatiou "stamatiou.antonis@protonmail.com"
 
 WORKDIR /app
 RUN pip install telegram python-telegram-bot
-COPY telebot.py /app
+COPY telbot.py /app
 
 ENTRYPOINT [ "python" ]
 
