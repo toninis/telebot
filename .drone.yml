@@ -11,5 +11,3 @@ pipeline:
       TELEBOT: ${TELEBOT_TOKEN}
     commands:
       - docker run -d --name telebot telebot:${DRONE_COMMIT}
-    # volumes:
-    #   - /var/run/docker.sock:/var/run/docker.sock
