@@ -2,20 +2,20 @@ pipeline:
 
   build:
     image: docker:18.03
-    environment:
-      - DOCKER_HOST=tcp://docker:2375
+    # environment:
+    #   - DOCKER_HOST=tcp://docker:2375
     commands:
       - docker build -t telebot:${DRONE_COMMIT} .
 
   deploy:
     image: docker:18.03
     environment:
-      - DOCKER_HOST=tcp://docker:2375
+      # - DOCKER_HOST=tcp://docker:2375
       - TELEBOT=${TELEBOT_TOKEN}
     commands:
       - docker run -d --name telebot telebot:${DRONE_COMMIT}
 
-services:
-  docker:
-    image: docker:18.03-dind
-    command: "--tls=false"
+# services:
+#   docker:
+#     image: docker:18.03-dind
+#     command: "--tls=false"
