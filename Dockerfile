@@ -1,4 +1,4 @@
-FROM python:2.7.15
+FROM python
 
 MAINTAINER Antonis Stamatiou "stamatiou.antonis@protonmail.com"
 
