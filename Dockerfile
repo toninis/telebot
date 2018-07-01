@@ -1,10 +1,11 @@
-FROM python:alpine
+FROM python:2.7.15
 
 MAINTAINER Antonis Stamatiou "stamatiou.antonis@protonmail.com"
 
 WORKDIR /app
+COPY ./requirements.txt /app
+RUN pip install -r requirements.txt
 COPY . /app
-RUN pip install -r /app/requirements.txt
 ENV TELEBOT=''
 
 ENTRYPOINT [ "python" ]
